@@ -1,11 +1,8 @@
 #include "solution.hpp"
 #include <algorithm>
-#include <iostream>
-#include <sstream>
 #include <vector>
 #include <ranges>
 #include <numeric>
-#include <map>
 
 int Solution::solvePart1(const std::vector<std::string> &input)
 {
