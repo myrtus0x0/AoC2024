@@ -1,9 +1,12 @@
 day*/build
 day*/input.txt
 day*/test/doctest.h
+day*/.cache
 
 .vscode
 day*/.vscode
 
 build/
 template/doctest.h
+
+.clang-format
