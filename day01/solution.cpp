@@ -22,15 +22,9 @@ int Solution::solvePart1(const std::vector<std::string> &input) {
     std::vector<int> differences;
 
     for (auto [l1, l2] : std::views::zip(list1, list2)) {
-        int max = l1;
-        int min = l2;
-        if (l1 < l2) {
-            min = l1;
-            max = l2;
-        }
-
-        differences.push_back(max - min);
+        differences.push_back(std::abs(l1 - l2));
     }
+
     return std::accumulate(differences.begin(), differences.end(), 0);
 }
 
