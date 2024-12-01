@@ -47,7 +47,6 @@ int Solution::solvePart2(const std::vector<std::string> &input) {
 
     int sum = 0;
     for (int v1 : list1) {
-        int mult = 0;
         for (int v2 : list2) {
             if (v1 == v2) {
                 sum += v1;
