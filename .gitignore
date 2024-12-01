@@ -1,4 +1,9 @@
 day*/build
 day*/input.txt
+day*/test/doctest.h
 
+.vscode
+day*/.vscode
+
+build/
 template/doctest.h
