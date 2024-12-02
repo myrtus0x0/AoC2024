@@ -82,7 +82,9 @@ int Solution::solvePart2(const std::vector<std::string> &input) {
         for (size_t i = 0; i < currentReport.levels.size(); i++) {
             report newReport = currentReport;
             // NewReport now contains a copy of the report with a specific level
-            // removed. XXX: hack of just removing all entries one by one and
+            // removed. 
+            //
+            // XXX: hack of just removing all entries one by one and
             // seeing if it results in same. Change this logic to be more
             // efficient, so we dont need to make potentially 5 copies
             newReport.levels.erase(newReport.levels.begin() + i);
