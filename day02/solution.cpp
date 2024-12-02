@@ -16,7 +16,7 @@ bool isSafe(const report currentReport) {
         if (absDiff < 1 || absDiff > 3) {
             return false;
         }
-        
+
         // check if break increasing rule
         if (increasing && diff <= 0) {
             return false;
@@ -82,7 +82,9 @@ int Solution::solvePart2(const std::vector<std::string> &input) {
         for (size_t i = 0; i < currentReport.levels.size(); i++) {
             report newReport = currentReport;
             // NewReport now contains a copy of the report with a specific level
-            // removed
+            // removed. XXX: hack of just removing all entries one by one and
+            // seeing if it results in same. Change this logic to be more
+            // efficient, so we dont need to make potentially 5 copies
             newReport.levels.erase(newReport.levels.begin() + i);
             if (isSafe(newReport)) {
                 // if we see its safe, we stop processing and go to next report
