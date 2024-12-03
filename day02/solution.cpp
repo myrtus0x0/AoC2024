@@ -85,7 +85,7 @@ int Solution::solvePart2(const std::vector<std::string> &input) {
             // removed. 
             //
             // XXX: hack of just removing all entries one by one and
-            // seeing if it results in same. Change this logic to be more
+            // seeing if it results in safe. Change this logic to be more
             // efficient, so we dont need to make potentially 5 copies
             newReport.levels.erase(newReport.levels.begin() + i);
             if (isSafe(newReport)) {
