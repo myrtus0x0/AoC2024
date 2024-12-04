@@ -1,4 +1,6 @@
 #include "solution.hpp"
+#include <iostream>
+#include <ostream>
 #include <vector>
 
 struct direction {
@@ -46,9 +48,13 @@ grid parseToGrid(const std::vector<std::string> &input) {
     return wordGrid;
 }
 
-int caclulateMatches(const grid wordGrid, int r, int c) {
+int caclulateMatches(const grid &wordGrid, int r, int c) {
     std::string targetStr = "XMAS";
     int targetSize = targetStr.size();
+
+    int columnSize = wordGrid[0].size();
+    int rowSize = wordGrid.size();
+
     int total = 0;
 
     int r_c = r;
@@ -56,10 +62,20 @@ int caclulateMatches(const grid wordGrid, int r, int c) {
 
     for (auto dir : directions) {
         int matchedChars = 0;
-
         // reset our start coordinate
         r = r_c;
         c = c_c;
+
+        // if last char in the string direction is out of bounds we know its
+        // wrong
+        if ((r + (3 * dir.yDelt) >= rowSize) || (r + (3 * dir.yDelt) < 0)) {
+            continue;
+        }
+
+        if ((c + (3 * dir.xDelt) >= columnSize) || (c + (3 * dir.xDelt) < 0)) {
+            continue;
+        }
+
         for (size_t i = 0; i < targetSize; i++) {
             if (wordGrid[r][c] == targetStr[i]) {
                 matchedChars++;
@@ -79,8 +95,7 @@ int caclulateMatches(const grid wordGrid, int r, int c) {
             }
 
             // check max bound
-            if ((c + dir.xDelt >= wordGrid[0].size()) ||
-                (r + dir.yDelt >= wordGrid.size())) {
+            if ((c + dir.xDelt >= columnSize) || (r + dir.yDelt >= rowSize)) {
                 break;
             }
 
@@ -93,7 +108,7 @@ int caclulateMatches(const grid wordGrid, int r, int c) {
     return total;
 }
 
-bool isCross(const grid wordGrid, int r, int c) {
+bool isCross(const grid &wordGrid, int r, int c) {
     int diagonalsFound = 0;
 
     for (auto dia : diagonals) {
@@ -119,9 +134,14 @@ bool isCross(const grid wordGrid, int r, int c) {
             break;
         }
 
+        char firstChar = wordGrid[r - dia.yDelt][c - dia.xDelt];
+        char secondChar = wordGrid[r][c];
+        char thirdChar = wordGrid[r + dia.yDelt][c + dia.xDelt];
+
         // at this point we are guaranteed our bounds are going to be valid
-        if (std::string{wordGrid[r - dia.yDelt][c - dia.xDelt], wordGrid[r][c],
-                        wordGrid[r + dia.yDelt][c + dia.xDelt]} == "MAS") {
+        if (firstChar == 'M' &&
+            secondChar == 'A' &&
+            thirdChar == 'S') {
             diagonalsFound++;
         }
     }
@@ -135,12 +155,13 @@ bool isCross(const grid wordGrid, int r, int c) {
 
 int Solution::solvePart1(const std::vector<std::string> &input) {
     grid wordGrid = parseToGrid(input);
-
+    int nRows = wordGrid.size();
+    int nColumns = wordGrid[0].size();
     int sum = 0;
+
     // iterate over every starting point in the grid
-    for (size_t r = 0; r < wordGrid.size(); r++) {
-        for (size_t c = 0; c < wordGrid[0].size(); c++) {
-            // slight optimization
+    for (size_t r = 0; r < nRows; r++) {
+        for (size_t c = 0; c < nColumns; c++) {
             if (wordGrid[r][c] == 'X') {
                 sum += caclulateMatches(wordGrid, r, c);
             }
@@ -155,7 +176,6 @@ int Solution::solvePart2(const std::vector<std::string> &input) {
     int sum = 0;
     for (size_t r = 0; r < wordGrid.size(); r++) {
         for (size_t c = 0; c < wordGrid[0].size(); c++) {
-            // slight optimization
             if (wordGrid[r][c] == 'A') {
                 if (isCross(wordGrid, r, c)) {
                     sum++;
