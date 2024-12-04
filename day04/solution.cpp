@@ -1,6 +1,4 @@
 #include "solution.hpp"
-#include <iostream>
-#include <ostream>
 #include <vector>
 
 struct direction {
@@ -139,9 +137,7 @@ bool isCross(const grid &wordGrid, int r, int c) {
         char thirdChar = wordGrid[r + dia.yDelt][c + dia.xDelt];
 
         // at this point we are guaranteed our bounds are going to be valid
-        if (firstChar == 'M' &&
-            secondChar == 'A' &&
-            thirdChar == 'S') {
+        if (firstChar == 'M' && secondChar == 'A' && thirdChar == 'S') {
             diagonalsFound++;
         }
     }
