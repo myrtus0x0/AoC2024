@@ -56,6 +56,8 @@ int caclulateMatches(const grid wordGrid, int r, int c) {
 
     for (auto dir : directions) {
         int matchedChars = 0;
+
+        // reset our start coordinate
         r = r_c;
         c = c_c;
         for (size_t i = 0; i < targetSize; i++) {
@@ -94,32 +96,32 @@ int caclulateMatches(const grid wordGrid, int r, int c) {
 bool isCross(const grid wordGrid, int r, int c) {
     int diagonalsFound = 0;
 
-    for (auto dir : diagonals) {
+    for (auto dia : diagonals) {
         // first char check min bounds
-        if ((r - dir.yDelt < 0) || (c - dir.xDelt < 0)) {
+        if ((r - dia.yDelt < 0) || (c - dia.xDelt < 0)) {
             break;
         }
 
         // first char check inverse min bounds
-        if ((r - dir.yDelt >= wordGrid.size()) ||
-            (c - dir.xDelt > wordGrid[0].size())) {
+        if ((r - dia.yDelt >= wordGrid.size()) ||
+            (c - dia.xDelt > wordGrid[0].size())) {
             break;
         }
 
         // third char check min bounds
-        if ((r + dir.yDelt < 0) || (c + dir.xDelt < 0)) {
+        if ((r + dia.yDelt < 0) || (c + dia.xDelt < 0)) {
             break;
         }
 
         // third char check inverse min bounds
-        if ((r + dir.yDelt >= wordGrid.size()) ||
-            (c + dir.xDelt > wordGrid[0].size())) {
+        if ((r + dia.yDelt >= wordGrid.size()) ||
+            (c + dia.xDelt > wordGrid[0].size())) {
             break;
         }
 
-        // at this point we are guaranteed our bounds are correct
-        if (std::string{wordGrid[r - dir.yDelt][c - dir.xDelt], wordGrid[r][c],
-                        wordGrid[r + dir.yDelt][c + dir.xDelt]} == "MAS") {
+        // at this point we are guaranteed our bounds are going to be valid
+        if (std::string{wordGrid[r - dia.yDelt][c - dia.xDelt], wordGrid[r][c],
+                        wordGrid[r + dia.yDelt][c + dia.xDelt]} == "MAS") {
             diagonalsFound++;
         }
     }
@@ -127,6 +129,7 @@ bool isCross(const grid wordGrid, int r, int c) {
     if (diagonalsFound == 2) {
         return true;
     }
+
     return false;
 }
 
