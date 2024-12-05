@@ -6,7 +6,7 @@ struct report {
     std::vector<int> levels;
 };
 
-bool isSafe(const report currentReport) {
+bool isSafe(const report &currentReport) {
     bool increasing = currentReport.levels[1] > currentReport.levels[0];
 
     for (size_t i = 1; i < currentReport.levels.size(); i++) {
@@ -82,7 +82,7 @@ int Solution::solvePart2(const std::vector<std::string> &input) {
         for (size_t i = 0; i < currentReport.levels.size(); i++) {
             report newReport = currentReport;
             // NewReport now contains a copy of the report with a specific level
-            // removed. 
+            // removed.
             //
             // XXX: hack of just removing all entries one by one and
             // seeing if it results in safe. Change this logic to be more
