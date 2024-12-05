@@ -26,10 +26,7 @@ std::unordered_map<int, std::unordered_set<int>> gRules;
 bool customCmp(int val1, int val2) {
     // checks whether a rule exists where val1 comes before val2. If this is the
     // case, we return true indicating that val1 should go before val2
-    if (gRules[val1].find(val2) != gRules[val1].end()) {
-        return true;
-    }
-    return false;
+    return gRules[val1].find(val2) != gRules[val1].end();
 }
 
 std::vector<std::vector<int>>
