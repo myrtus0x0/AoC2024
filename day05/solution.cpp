@@ -5,11 +5,6 @@
 #include <unordered_set>
 #include <vector>
 
-struct rule {
-    int firstPage;
-    int secondPage;
-};
-
 int getIndex(const std::vector<int> &section, int value) {
     for (size_t i = 0; i < section.size(); i++) {
         if (section[i] == value) {
