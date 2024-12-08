@@ -2,8 +2,8 @@
 #include <vector>
 
 struct direction {
-    int xDelt;
-    int yDelt;
+    int cDelt;
+    int rDelt;
 };
 
 using grid = std::vector<std::vector<char>>;
@@ -66,11 +66,11 @@ int caclulateMatches(const grid &wordGrid, int r, int c) {
 
         // if last char in the string direction is out of bounds we know its
         // wrong
-        if ((r + (3 * dir.yDelt) >= rowSize) || (r + (3 * dir.yDelt) < 0)) {
+        if ((r + (3 * dir.rDelt) >= rowSize) || (r + (3 * dir.rDelt) < 0)) {
             continue;
         }
 
-        if ((c + (3 * dir.xDelt) >= columnSize) || (c + (3 * dir.xDelt) < 0)) {
+        if ((c + (3 * dir.cDelt) >= columnSize) || (c + (3 * dir.cDelt) < 0)) {
             continue;
         }
 
@@ -88,18 +88,18 @@ int caclulateMatches(const grid &wordGrid, int r, int c) {
             }
 
             // check min bound
-            if ((c + dir.xDelt < 0) || (r + dir.yDelt < 0)) {
+            if ((c + dir.cDelt < 0) || (r + dir.rDelt < 0)) {
                 break;
             }
 
             // check max bound
-            if ((c + dir.xDelt >= columnSize) || (r + dir.yDelt >= rowSize)) {
+            if ((c + dir.cDelt >= columnSize) || (r + dir.rDelt >= rowSize)) {
                 break;
             }
 
             // update to next coord
-            c += dir.xDelt;
-            r += dir.yDelt;
+            c += dir.cDelt;
+            r += dir.rDelt;
         }
     }
 
@@ -111,30 +111,30 @@ bool isCross(const grid &wordGrid, int r, int c) {
 
     for (auto dia : diagonals) {
         // first char check min bounds
-        if ((r - dia.yDelt < 0) || (c - dia.xDelt < 0)) {
+        if ((r - dia.rDelt < 0) || (c - dia.cDelt < 0)) {
             break;
         }
 
         // first char check inverse min bounds
-        if ((r - dia.yDelt >= wordGrid.size()) ||
-            (c - dia.xDelt > wordGrid[0].size())) {
+        if ((r - dia.rDelt >= wordGrid.size()) ||
+            (c - dia.cDelt > wordGrid[0].size())) {
             break;
         }
 
         // third char check min bounds
-        if ((r + dia.yDelt < 0) || (c + dia.xDelt < 0)) {
+        if ((r + dia.rDelt < 0) || (c + dia.cDelt < 0)) {
             break;
         }
 
         // third char check inverse min bounds
-        if ((r + dia.yDelt >= wordGrid.size()) ||
-            (c + dia.xDelt > wordGrid[0].size())) {
+        if ((r + dia.rDelt >= wordGrid.size()) ||
+            (c + dia.cDelt > wordGrid[0].size())) {
             break;
         }
 
-        char firstChar = wordGrid[r - dia.yDelt][c - dia.xDelt];
+        char firstChar = wordGrid[r - dia.rDelt][c - dia.cDelt];
         char secondChar = wordGrid[r][c];
-        char thirdChar = wordGrid[r + dia.yDelt][c + dia.xDelt];
+        char thirdChar = wordGrid[r + dia.rDelt][c + dia.cDelt];
 
         // at this point we are guaranteed our bounds are going to be valid
         if (firstChar == 'M' && secondChar == 'A' && thirdChar == 'S') {
