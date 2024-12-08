@@ -45,35 +45,37 @@ void guardedMap::initGuardLocation() {
 }
 
 void guardedMap::moveGuard() {
-    if (!visited.insert(guardLocation).second) {
-        // not worth processing as inf loop has been detected
-        // std::cout << "inf loop detected" << std::endl;
-        infiniteLoopDetected = true;
-        return;
+    while (true) {
+        if (!visited.insert(guardLocation).second) {
+            // not worth processing as inf loop has been detected
+            infiniteLoopDetected = true;
+            break;
+        }
+
+        int newR = guardLocation.row + directions[iDir % 4].rDelt;
+        int newC = guardLocation.col + directions[iDir % 4].cDelt;
+        // if we move out of bounds, then guard has escaped and we can return
+        if (newR >= map.size() || newC >= map[newR].size() || newR < 0 ||
+            newC < 0) {
+            break;
+        }
+
+        location potentialNextSpot = {newR, newC, map[newR][newC].value};
+
+        if (potentialNextSpot.value == '.' || potentialNextSpot.value == 'X') {
+            // Move guard forward
+            map[newR][newC].value = '^';
+            map[guardLocation.row][guardLocation.col].value = 'X';
+            guardLocation.row = newR;
+            guardLocation.col = newC;
+
+        } else if (potentialNextSpot.value == '#') {
+            iDir++;
+            guardLocation.dir = iDir % 4;
+        }
     }
 
-    int newR = guardLocation.row + directions[iDir % 4].rDelt;
-    int newC = guardLocation.col + directions[iDir % 4].cDelt;
-    // if we move out of bounds, then guard has escaped and we can return
-    if (newR >= map.size() || newC >= map[0].size() || newR < 0 || newC < 0) {
-        return;
-    }
-
-    location potentialNextSpot = {newR, newC, map[newR][newC].value};
-
-    if (potentialNextSpot.value == '.' || potentialNextSpot.value == 'X') {
-        // Move guard forward
-        map[newR][newC].value = '^';
-        map[guardLocation.row][guardLocation.col].value = 'X';
-        guardLocation.row = newR;
-        guardLocation.col = newC;
-
-    } else if (potentialNextSpot.value == '#') {
-        iDir++;
-        guardLocation.dir = iDir % 4;
-    }
-    
-    moveGuard();
+    return;
 }
 
 guardedMap::guardedMap(const std::vector<std::vector<location>> &initialMap)
@@ -81,18 +83,23 @@ guardedMap::guardedMap(const std::vector<std::vector<location>> &initialMap)
 
 int Solution::solvePart1(const std::vector<std::string> &input) {
     std::vector<std::vector<location>> map;
+    location guardLoc;
 
     for (int r = 0; r < input.size(); r++) {
         std::vector<location> row;
         for (int c = 0; c < input[r].size(); c++) {
             row.push_back({r, c, input[r][c]});
+            if (input[r][c] == '^') {
+                guardLoc = {r, c};
+            }
         }
         map.push_back(row);
     }
 
     guardedMap myMap(map);
     // traverse!!!!
-    myMap.initGuardLocation();
+    myMap.guardLocation.row = guardLoc.row;
+    myMap.guardLocation.col = guardLoc.col;
     myMap.moveGuard();
     return myMap.getPath();
 }
@@ -100,30 +107,45 @@ int Solution::solvePart1(const std::vector<std::string> &input) {
 int Solution::solvePart2(const std::vector<std::string> &input) {
     std::vector<std::vector<location>> map;
     int blockers = 0;
+    location guardLoc;
 
+    // parse the map
     for (int r = 0; r < input.size(); r++) {
         std::vector<location> row;
         for (int c = 0; c < input[r].size(); c++) {
             row.push_back({r, c, input[r][c]});
+            if (input[r][c] == '^') {
+                guardLoc = {r, c};
+            }
         }
         map.push_back(row);
     }
 
     guardedMap solvedMap(map);
     // calculate the path moved as those are the only locations we need to test
-    solvedMap.initGuardLocation();
+    solvedMap.guardLocation.row = guardLoc.row;
+    solvedMap.guardLocation.col = guardLoc.col;
+    solvedMap.guardLocation.dir = 0;
     solvedMap.moveGuard();
 
     std::set<coord> points;
 
-    for (auto location : solvedMap.visited) {
+    for (const auto &location : solvedMap.visited) {
         guardedMap newMap(map);
+        // is the guard location so we dont count it
+        if (guardLoc.col == location.col && guardLoc.row == location.row) {
+            continue;
+        }
+
+        // if we already visited the point, then ignore
         if (points.find({location.row, location.col}) != points.end()) {
             continue;
         }
 
         newMap.map[location.row][location.col].value = '#';
-        newMap.initGuardLocation();
+        newMap.guardLocation.row = guardLoc.row;
+        newMap.guardLocation.col = guardLoc.col;
+        newMap.guardLocation.dir = 0;
         newMap.moveGuard();
         if (newMap.infiniteLoopDetected) {
             blockers++;

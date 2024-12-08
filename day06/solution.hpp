@@ -33,8 +33,9 @@ struct coord {
     int r;
     int c;
 
-    bool operator<(const coord& other) const {
-        if (c != other.c) return c < other.c;
+    bool operator<(const coord &other) const {
+        if (c != other.c)
+            return c < other.c;
         return r < other.r;
     }
 };
@@ -42,12 +43,12 @@ struct coord {
 class guardedMap {
   private:
     int iDir = 0;
-    location guardLocation;
 
   public:
     std::set<location> visited;
     std::vector<std::vector<location>> map;
     bool infiniteLoopDetected = false;
+    location guardLocation;
 
     bool checkBeenHere();
     void moveGuard();
