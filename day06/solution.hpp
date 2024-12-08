@@ -53,7 +53,7 @@ class guardedMap {
     void moveGuard();
     bool isGuardInMap();
     void updatePath();
-    location getGuardLocation();
+    void initGuardLocation();
     void printMap();
     size_t getPath();
     guardedMap(const std::vector<std::vector<location>> &initialMap =

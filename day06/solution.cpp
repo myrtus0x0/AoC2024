@@ -29,29 +29,22 @@ size_t guardedMap::getPath() {
             }
         }
     }
-
     return total;
 }
 
-location guardedMap::getGuardLocation() {
+void guardedMap::initGuardLocation() {
     for (int r = 0; r < map.size(); r++) {
         for (int c = 0; c < map[r].size(); c++) {
             if (map[r][c].value == '^') {
-                return {r, c, '^'};
+                guardLocation.row = r;
+                guardLocation.col = c;
+                guardLocation.dir = iDir % 4;
             }
         }
     }
-
-    return {-1, -1, '.'};
 }
 
 void guardedMap::moveGuard() {
-    location guardLocation = getGuardLocation();
-    if (guardLocation.row == -1 || guardLocation.col == -1) {
-        return;
-    }
-
-    guardLocation.dir = iDir % 4;
     if (!visited.insert(guardLocation).second) {
         // not worth processing as inf loop has been detected
         // std::cout << "inf loop detected" << std::endl;
@@ -72,11 +65,14 @@ void guardedMap::moveGuard() {
         // Move guard forward
         map[newR][newC].value = '^';
         map[guardLocation.row][guardLocation.col].value = 'X';
+        guardLocation.row = newR;
+        guardLocation.col = newC;
 
     } else if (potentialNextSpot.value == '#') {
         iDir++;
+        guardLocation.dir = iDir % 4;
     }
-
+    
     moveGuard();
 }
 
@@ -85,7 +81,6 @@ guardedMap::guardedMap(const std::vector<std::vector<location>> &initialMap)
 
 int Solution::solvePart1(const std::vector<std::string> &input) {
     std::vector<std::vector<location>> map;
-    location guardStart;
 
     for (int r = 0; r < input.size(); r++) {
         std::vector<location> row;
@@ -97,13 +92,13 @@ int Solution::solvePart1(const std::vector<std::string> &input) {
 
     guardedMap myMap(map);
     // traverse!!!!
+    myMap.initGuardLocation();
     myMap.moveGuard();
     return myMap.getPath();
 }
 
 int Solution::solvePart2(const std::vector<std::string> &input) {
     std::vector<std::vector<location>> map;
-    location guardStart;
     int blockers = 0;
 
     for (int r = 0; r < input.size(); r++) {
@@ -116,6 +111,7 @@ int Solution::solvePart2(const std::vector<std::string> &input) {
 
     guardedMap solvedMap(map);
     // calculate the path moved as those are the only locations we need to test
+    solvedMap.initGuardLocation();
     solvedMap.moveGuard();
 
     std::set<coord> points;
@@ -127,6 +123,7 @@ int Solution::solvePart2(const std::vector<std::string> &input) {
         }
 
         newMap.map[location.row][location.col].value = '#';
+        newMap.initGuardLocation();
         newMap.moveGuard();
         if (newMap.infiniteLoopDetected) {
             blockers++;
