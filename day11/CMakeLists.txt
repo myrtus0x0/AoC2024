@@ -4,6 +4,8 @@ project(day11)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native")
+
 # Main executable
 add_executable(day11 main.cpp solution.cpp)
 
