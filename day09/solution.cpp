@@ -1,6 +1,4 @@
 #include "solution.hpp"
-#include <iostream>
-#include <ostream>
 #include <string>
 
 struct chunk {
@@ -84,8 +82,8 @@ void defragDiskP2(std::vector<chunk> &diskImage) {
             int diff = diskImage[left].len - diskImage[right].len;
             if (diskImage[left].id == -1 && diff >= 0) {
 
-                
-                diskImage[left] = chunk(diskImage[right].id, diskImage[right].len);
+                diskImage[left] =
+                    chunk(diskImage[right].id, diskImage[right].len);
                 diskImage[right] = chunk(-1, diskImage[right].len);
 
                 // fix the space difference
@@ -131,7 +129,6 @@ int64_t calcChecksum(const std::vector<int> &target) {
 int64_t Solution::solvePart1(const std::vector<std::string> &input) {
     std::vector<int> diskImage = generateDiskImage(input[0]);
     defragDisk(diskImage);
-
     return calcChecksum(diskImage);
 }
 
