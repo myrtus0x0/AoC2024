@@ -26,7 +26,7 @@ cp template/main.cpp $day_dir
 cp template/test.cpp $day_dir/test
 cp template/build.sh $day_dir
 
-# copy headers 
+# copy headers
 cp template/*.hpp $day_dir
 cp template/doctest.h $day_dir/test
 
@@ -37,6 +37,8 @@ project(day$padded_day)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_CXX_FLAGS "\${CMAKE_CXX_FLAGS} -O3 -march=native")
 
 # Main executable
 add_executable(day$padded_day main.cpp solution.cpp)
